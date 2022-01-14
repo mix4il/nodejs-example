@@ -18,14 +18,9 @@ const compute = (array) =>{
             },
         });
 
-        worker.on('message', (message) =>{
-            console.log(worker.threadId);
-            resolve(message);
-        });
+        worker.on('message', resolve);
 
-        worker.on('error',(err)=>{
-            reject(err);
-        });
+        worker.on('error', reject);
 
         worker.on('exit', () =>{
             console.log(`Завершился поток`);
