@@ -3,6 +3,7 @@ process.on('message', (message) => {
         process.disconnect();
         return;
     };
+    console.log(typeof message === 'string');
     console.log(`Было получено ${message}`);
     process.send('Отправлено Pong');
 });

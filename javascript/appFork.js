@@ -10,4 +10,4 @@ forkProcess.on('close', (err) =>{
     console.log(err);
 })
 
-forkProcess.send('Ping');
+forkProcess.send([12,12,21,321]);
