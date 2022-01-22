@@ -17,8 +17,15 @@ const printHelp = ()=>{
     `));
 };
 
+const printWeather = (res, icon) => {
+    console.log(deleteSpace(`${chalk.bgYellow('Weather: ')} ${icon} ${res.weather[0].description}
+    Город: ${res.name}
+    Температура: ${res.main.temp}
+    `));
+};
+
 const deleteSpace = (str) =>{
     return str.split('\n').map(line => line.trim()).join('\n');
 };
 
-export {printSuccess, printHelp,  printError};
+export {printSuccess, printHelp,  printError, printWeather};
