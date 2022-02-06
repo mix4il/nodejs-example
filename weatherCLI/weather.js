@@ -61,7 +61,7 @@ const initProgram = () =>{
     if(args.t){
         return saveToken(args.t);
     }
-    returngetForcast();
+    return getForcast();
 }
 
 initProgram()

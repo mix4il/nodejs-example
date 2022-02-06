@@ -92,7 +92,7 @@ p1.then((data) => {
     console.log('End', changeData);
 }).catch((err) => {console.error('Error: ', err);})
 .finally(() => {console.log('finally')}); */
-
+/* 
 const sleep = ms => new Promise((resolve) => {
     setTimeout(() => resolve(),ms);
 });
@@ -100,5 +100,128 @@ const sleep = ms => new Promise((resolve) => {
 sleep(2000).then(() => {
     console.log('After 2 sec.');
     return sleep(3000);
-}).then(() => {console.log('After 3 sec.')});;
+}).then(() => {console.log('After 3 sec.')});; */
+
+/* const person = Object.create({},{
+    name:{
+        value: 'Mihail',
+        enumerable: true,
+        configurable: true,
+        writable: true
+    },
+    fullname:{
+        value: 'Baskakov',
+        enumerable: true,
+    },
+    age:{
+        value:12,
+        enumerable: true,
+    }
+})
+
+for(let key in person){
+    console.log('Key', key, person[key]);
+} 
+
+console.log(person) */
+
+/* const delay = ms => {return new Promise((resolve ) => setTimeout(resolve, ms))};
+
+const url = 'https://jsonplaceholder.typicode.com/todos'; */
+
+/* 
+function fetchTodos (url){
+    return delay(2000)
+    .then(() => fetch(url))
+    .then((res) => res.json());
+}; */
+
+/* async function fetchTodos(url){
+    console.log('Fetch todos ...');
+    try{
+        await delay(2000);
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(data);
+    }catch(e){
+        console.error(e);
+    }
+    fetchTodos(url)
+} */
+
+/* fetchTodos(url)
+    .then(data => console.log(data))
+    .catch((err) => console.log(err.message)); */
+
+const withHiddenProps = (target, prefix = '_') => {
+    return new Proxy(target, {
+        has: (target, prop) => (prop in target && !prop.startsWith(prefix)),
+        ownKeys: (target) => Reflect.ownKeys(target).filter(p => !p.startsWith(prefix)),
+        get: (target, prop, receiver) => (prop in receiver) ? target[prop] : undefined,
+    });
+}
+
+const person = withHiddenProps({name: 'John', age: 22, _id: '123'});
+
+
+const users = [
+    {id: 1, name: 'John', job:'Fullstack'},
+    {id: 22, name: 'Mike', job:'Miner'},
+    {id: 31, name: 'Lena', job:'FAsff'},
+    {id: 4, name: 'Niko', job:'Gamer'}
+];
+
+const IndexedArray = new Proxy(Array,{
+    construct(target, [args]){
+        const index = {};
+        args.forEach(item => index[item.id] = item);
+
+        return new Proxy(new target(...args),{
+            get(target,prop){
+                switch(prop){
+                    case 'push':{
+                        return item =>{
+                            index[item.id] = item;
+                            target[prop].call(target, item);
+                        }
+                    }
+                    case 'findById':{
+                        return id => index[id];
+                    }
+                    default: return target[prop];
+                }
+            }
+        });
+    }
+});
+
+const arrayIndex = new IndexedArray([
+    {id: 1, name: 'John', job:'Fullstack'},
+    {id: 22, name: 'Mike', job:'Miner'},
+    {id: 31, name: 'Lena', job:'FAsff'},
+    {id: 4, name: 'Niko', job:'Gamer'}
+]);
+
+
+const emptyObj = () =>
+ new Proxy({},
+   {
+     get: (target, key, receiver) => (
+           Reflect.has(target, key) ||
+           Reflect.set(target, key, emptyObj()),
+           Reflect.get(target, key, receiver)
+     )
+   }
+ )
+;
+const path = emptyObj();
+
+path.to.virtual.node.in.empty.object = 123;
+
+console.log(path.to.virtual.node.in.empty.object);
+
+
+
+
+
 
