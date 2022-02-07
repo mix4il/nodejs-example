@@ -7,6 +7,7 @@ import { TYPES } from './types';
 import { IExceptionFilter } from './errors/exception.flter.interface';
 import 'reflect-metadata';
 import { IUserController } from './users/users.interface.controller';
+import {json} from 'body-parser';
 
 @injectable()
 export class App {
@@ -26,6 +27,10 @@ export class App {
 		this.exceptionFilter = exceptionFilter;
 	}
 
+	private useMiddleware(){
+		this.app.use(json())
+	}
+
 	private useRouter() {
 		this.app.use('/users', this.userController.router);
 	}
@@ -39,6 +44,7 @@ export class App {
 	}
 
 	public async init(): Promise<void> {
+		this.useMiddleware();
 		this.useRouter();
 		this.useExceptionFilter();
 		this.listenServer();

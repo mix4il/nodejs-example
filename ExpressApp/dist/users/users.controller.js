@@ -23,15 +23,17 @@ let UserController = class UserController extends base_controller_1.BaseControll
         super(loggerService);
         this.loggerService = loggerService;
         this.bindRoutes([
-            { path: '/login', method: 'get', func: this.login },
-            { path: '/admin', method: 'get', func: this.admin },
+            { path: '/login', method: 'post', func: this.login },
+            { path: '/admin', method: 'post', func: this.admin },
             { path: '/', method: 'get', func: this.users },
         ]);
     }
     login(req, res, next) {
+        console.log(req.body);
         next(new http_error_1.HTTPError(404, 'Страница не найдена'));
     }
     admin(req, res) {
+        console.log(req.body);
         this.ok(res, 'admin');
     }
     users(req, res) {
@@ -44,3 +46,4 @@ UserController = __decorate([
     __metadata("design:paramtypes", [Object])
 ], UserController);
 exports.UserController = UserController;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXNlcnMuY29udHJvbGxlci5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy91c2Vycy91c2Vycy5jb250cm9sbGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7OztBQUFBLCtEQUEyRDtBQUczRCxxREFBaUQ7QUFDakQseUNBQStDO0FBQy9DLG9DQUFpQztBQU1qQyw0QkFBMEI7QUFHMUIsSUFBYSxjQUFjLEdBQTNCLE1BQWEsY0FBZSxTQUFRLGdDQUFjO0lBQ2pELFlBQTJDLGFBQXNCO1FBQ2hFLEtBQUssQ0FBQyxhQUFhLENBQUMsQ0FBQztRQURxQixrQkFBYSxHQUFiLGFBQWEsQ0FBUztRQUVoRSxJQUFJLENBQUMsVUFBVSxDQUFDO1lBQ2YsRUFBRSxJQUFJLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRSxNQUFNLEVBQUUsSUFBSSxFQUFFLElBQUksQ0FBQyxLQUFLLEVBQUU7WUFDcEQsRUFBRSxJQUFJLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRSxNQUFNLEVBQUUsSUFBSSxFQUFFLElBQUksQ0FBQyxLQUFLLEVBQUU7WUFDcEQsRUFBRSxJQUFJLEVBQUUsR0FBRyxFQUFFLE1BQU0sRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFFLElBQUksQ0FBQyxLQUFLLEVBQUU7U0FDOUMsQ0FBQyxDQUFDO0lBQ0osQ0FBQztJQUVELEtBQUssQ0FBQyxHQUE4QixFQUFFLEdBQWEsRUFBRSxJQUFrQjtRQUN0RSxPQUFPLENBQUMsR0FBRyxDQUFDLEdBQUcsQ0FBQyxJQUFJLENBQUMsQ0FBQztRQUN0QixJQUFJLENBQUMsSUFBSSxzQkFBUyxDQUFDLEdBQUcsRUFBRSxxQkFBcUIsQ0FBQyxDQUFDLENBQUM7SUFDakQsQ0FBQztJQUVELEtBQUssQ0FBQyxHQUFxQyxFQUFFLEdBQWE7UUFDekQsT0FBTyxDQUFDLEdBQUcsQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLENBQUM7UUFDdEIsSUFBSSxDQUFDLEVBQUUsQ0FBQyxHQUFHLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDdkIsQ0FBQztJQUVELEtBQUssQ0FBQyxHQUFZLEVBQUUsR0FBYTtRQUNoQyxJQUFJLENBQUMsRUFBRSxDQUFDLEdBQUcsRUFBRSxPQUFPLENBQUMsQ0FBQztJQUN2QixDQUFDO0NBQ0QsQ0FBQTtBQXZCWSxjQUFjO0lBRDFCLElBQUEsc0JBQVUsR0FBRTtJQUVDLFdBQUEsSUFBQSxrQkFBTSxFQUFDLGFBQUssQ0FBQyxPQUFPLENBQUMsQ0FBQTs7R0FEdEIsY0FBYyxDQXVCMUI7QUF2Qlksd0NBQWMifQ==
