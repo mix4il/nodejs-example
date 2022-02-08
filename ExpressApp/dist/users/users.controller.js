@@ -11,6 +11,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const base_controller_1 = require("../common/base.controller");
@@ -19,22 +28,31 @@ const inversify_1 = require("inversify");
 const types_1 = require("../types");
 require("reflect-metadata");
 let UserController = class UserController extends base_controller_1.BaseController {
-    constructor(loggerService) {
+    constructor(loggerService, userService) {
         super(loggerService);
         this.loggerService = loggerService;
+        this.userService = userService;
         this.bindRoutes([
             { path: '/login', method: 'post', func: this.login },
             { path: '/admin', method: 'post', func: this.admin },
             { path: '/', method: 'get', func: this.users },
         ]);
     }
-    login(req, res, next) {
-        console.log(req.body);
+    login({ body }, res, next) {
+        console.log(body);
         next(new http_error_1.HTTPError(404, 'Страница не найдена'));
     }
-    admin(req, res) {
-        console.log(req.body);
-        this.ok(res, 'admin');
+    admin({ body }, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this.userService.createUser(body);
+            if (result) {
+                this.ok(res, result);
+                this.loggerService.log(result);
+            }
+            else {
+                next(new http_error_1.HTTPError(404, 'Ошибка добавления'));
+            }
+        });
     }
     users(req, res) {
         this.ok(res, 'users');
@@ -43,7 +61,8 @@ let UserController = class UserController extends base_controller_1.BaseControll
 UserController = __decorate([
     (0, inversify_1.injectable)(),
     __param(0, (0, inversify_1.inject)(types_1.TYPES.ILogger)),
-    __metadata("design:paramtypes", [Object])
+    __param(1, (0, inversify_1.inject)(types_1.TYPES.IUserService)),
+    __metadata("design:paramtypes", [Object, Object])
 ], UserController);
 exports.UserController = UserController;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXNlcnMuY29udHJvbGxlci5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy91c2Vycy91c2Vycy5jb250cm9sbGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7OztBQUFBLCtEQUEyRDtBQUczRCxxREFBaUQ7QUFDakQseUNBQStDO0FBQy9DLG9DQUFpQztBQU1qQyw0QkFBMEI7QUFHMUIsSUFBYSxjQUFjLEdBQTNCLE1BQWEsY0FBZSxTQUFRLGdDQUFjO0lBQ2pELFlBQTJDLGFBQXNCO1FBQ2hFLEtBQUssQ0FBQyxhQUFhLENBQUMsQ0FBQztRQURxQixrQkFBYSxHQUFiLGFBQWEsQ0FBUztRQUVoRSxJQUFJLENBQUMsVUFBVSxDQUFDO1lBQ2YsRUFBRSxJQUFJLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRSxNQUFNLEVBQUUsSUFBSSxFQUFFLElBQUksQ0FBQyxLQUFLLEVBQUU7WUFDcEQsRUFBRSxJQUFJLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRSxNQUFNLEVBQUUsSUFBSSxFQUFFLElBQUksQ0FBQyxLQUFLLEVBQUU7WUFDcEQsRUFBRSxJQUFJLEVBQUUsR0FBRyxFQUFFLE1BQU0sRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFFLElBQUksQ0FBQyxLQUFLLEVBQUU7U0FDOUMsQ0FBQyxDQUFDO0lBQ0osQ0FBQztJQUVELEtBQUssQ0FBQyxHQUE4QixFQUFFLEdBQWEsRUFBRSxJQUFrQjtRQUN0RSxPQUFPLENBQUMsR0FBRyxDQUFDLEdBQUcsQ0FBQyxJQUFJLENBQUMsQ0FBQztRQUN0QixJQUFJLENBQUMsSUFBSSxzQkFBUyxDQUFDLEdBQUcsRUFBRSxxQkFBcUIsQ0FBQyxDQUFDLENBQUM7SUFDakQsQ0FBQztJQUVELEtBQUssQ0FBQyxHQUFxQyxFQUFFLEdBQWE7UUFDekQsT0FBTyxDQUFDLEdBQUcsQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLENBQUM7UUFDdEIsSUFBSSxDQUFDLEVBQUUsQ0FBQyxHQUFHLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDdkIsQ0FBQztJQUVELEtBQUssQ0FBQyxHQUFZLEVBQUUsR0FBYTtRQUNoQyxJQUFJLENBQUMsRUFBRSxDQUFDLEdBQUcsRUFBRSxPQUFPLENBQUMsQ0FBQztJQUN2QixDQUFDO0NBQ0QsQ0FBQTtBQXZCWSxjQUFjO0lBRDFCLElBQUEsc0JBQVUsR0FBRTtJQUVDLFdBQUEsSUFBQSxrQkFBTSxFQUFDLGFBQUssQ0FBQyxPQUFPLENBQUMsQ0FBQTs7R0FEdEIsY0FBYyxDQXVCMUI7QUF2Qlksd0NBQWMifQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXNlcnMuY29udHJvbGxlci5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy91c2Vycy91c2Vycy5jb250cm9sbGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBLCtEQUEyRDtBQUczRCxxREFBaUQ7QUFDakQseUNBQStDO0FBQy9DLG9DQUFpQztBQU1qQyw0QkFBMEI7QUFLMUIsSUFBYSxjQUFjLEdBQTNCLE1BQWEsY0FBZSxTQUFRLGdDQUFjO0lBQ2pELFlBQ2dDLGFBQXNCLEVBQ2pCLFdBQXlCO1FBRTdELEtBQUssQ0FBQyxhQUFhLENBQUMsQ0FBQztRQUhVLGtCQUFhLEdBQWIsYUFBYSxDQUFTO1FBQ2pCLGdCQUFXLEdBQVgsV0FBVyxDQUFjO1FBRzdELElBQUksQ0FBQyxVQUFVLENBQUM7WUFDZixFQUFFLElBQUksRUFBRSxRQUFRLEVBQUUsTUFBTSxFQUFFLE1BQU0sRUFBRSxJQUFJLEVBQUUsSUFBSSxDQUFDLEtBQUssRUFBRTtZQUNwRCxFQUFFLElBQUksRUFBRSxRQUFRLEVBQUUsTUFBTSxFQUFFLE1BQU0sRUFBRSxJQUFJLEVBQUUsSUFBSSxDQUFDLEtBQUssRUFBRTtZQUNwRCxFQUFFLElBQUksRUFBRSxHQUFHLEVBQUUsTUFBTSxFQUFFLEtBQUssRUFBRSxJQUFJLEVBQUUsSUFBSSxDQUFDLEtBQUssRUFBRTtTQUM5QyxDQUFDLENBQUM7SUFDSixDQUFDO0lBRUQsS0FBSyxDQUFDLEVBQUMsSUFBSSxFQUE0QixFQUFFLEdBQWEsRUFBRSxJQUFrQjtRQUN6RSxPQUFPLENBQUMsR0FBRyxDQUFDLElBQUksQ0FBQyxDQUFDO1FBQ2xCLElBQUksQ0FBQyxJQUFJLHNCQUFTLENBQUMsR0FBRyxFQUFFLHFCQUFxQixDQUFDLENBQUMsQ0FBQztJQUNqRCxDQUFDO0lBRUssS0FBSyxDQUFDLEVBQUMsSUFBSSxFQUFtQyxFQUFFLEdBQWEsRUFBRSxJQUFrQjs7WUFDdEYsTUFBTSxNQUFNLEdBQUcsTUFBTSxJQUFJLENBQUMsV0FBVyxDQUFDLFVBQVUsQ0FBQyxJQUFJLENBQUMsQ0FBQztZQUN2RCxJQUFHLE1BQU0sRUFBQztnQkFDVCxJQUFJLENBQUMsRUFBRSxDQUFDLEdBQUcsRUFBRSxNQUFNLENBQUMsQ0FBQztnQkFDckIsSUFBSSxDQUFDLGFBQWEsQ0FBQyxHQUFHLENBQUMsTUFBTSxDQUFDLENBQUM7YUFDL0I7aUJBQUk7Z0JBQ0osSUFBSSxDQUFDLElBQUksc0JBQVMsQ0FBQyxHQUFHLEVBQUUsbUJBQW1CLENBQUMsQ0FBQyxDQUFDO2FBQzlDO1FBQ0YsQ0FBQztLQUFBO0lBRUQsS0FBSyxDQUFDLEdBQVksRUFBRSxHQUFhO1FBQ2hDLElBQUksQ0FBQyxFQUFFLENBQUMsR0FBRyxFQUFFLE9BQU8sQ0FBQyxDQUFDO0lBQ3ZCLENBQUM7Q0FDRCxDQUFBO0FBL0JZLGNBQWM7SUFEMUIsSUFBQSxzQkFBVSxHQUFFO0lBR1YsV0FBQSxJQUFBLGtCQUFNLEVBQUMsYUFBSyxDQUFDLE9BQU8sQ0FBQyxDQUFBO0lBQ3JCLFdBQUEsSUFBQSxrQkFBTSxFQUFDLGFBQUssQ0FBQyxZQUFZLENBQUMsQ0FBQTs7R0FIaEIsY0FBYyxDQStCMUI7QUEvQlksd0NBQWMifQ==

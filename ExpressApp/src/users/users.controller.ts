@@ -8,28 +8,38 @@ import { ILogger } from '../logger/logger.interface';
 import { IUserController } from './users.interface.controller';
 import { LoginDto } from './userLogin.dto';
 import { RegistrationDto } from './userRegistration.dto';
-import {json} from 'body-parser';
+import { IUserService } from './user.service.interface';
 import 'reflect-metadata';
+import { ValidateMiddleware } from '../common/validate.middleware';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
-	constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.IUserService) private userService: IUserService
+		) {
 		super(loggerService);
 		this.bindRoutes([
-			{ path: '/login', method: 'post', func: this.login },
+			{ path: '/login', method: 'post', func: this.login ,
+			 middlewares : [new ValidateMiddleware(RegistrationDto)]},
 			{ path: '/admin', method: 'post', func: this.admin },
 			{ path: '/', method: 'get', func: this.users },
 		]);
 	}
 
-	login(req: Request<{}, {}, LoginDto>, res: Response, next: NextFunction): void {
-		console.log(req.body);
+	login({body}: Request<{}, {}, LoginDto>, res: Response, next: NextFunction): void {
+		console.log(body);
 		next(new HTTPError(404, 'Страница не найдена'));
 	}
 
-	admin(req: Request<{}, {}, RegistrationDto>, res: Response): void {
-		console.log(req.body);
-		this.ok(res, 'admin');
+	async admin({body}: Request<{}, {}, RegistrationDto>, res: Response, next: NextFunction): Promise<void> {
+		const result = await this.userService.createUser(body);
+		if(result){
+			this.ok(res, result);
+			this.loggerService.log(result);
+		}else{
+			next(new HTTPError(404, 'Ошибка добавления'));
+		}
 	}
 
 	users(req: Request, res: Response): void {
