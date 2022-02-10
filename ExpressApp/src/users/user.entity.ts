@@ -1,9 +1,14 @@
 import {hash} from "bcryptjs";
+import { inject } from 'inversify';
+import { IConfigService } from '../config/config.interface.service';
+import { TYPES } from '../types';
 
 export class User {
     private _password!: string;
 
-    constructor(private readonly _email: string, private readonly _name: string){
+    constructor(private readonly _email: string,
+         private readonly _name: string,
+         ){
     }
 
     get password(){
@@ -18,7 +23,7 @@ export class User {
         return this._name;
     }
 
-    public async setPassword(password:string) :Promise<void>{
-        this._password = await hash(password, 10);
+    public async setPassword(password:string, salt:number): Promise<void>{
+        this._password = await hash(password, salt);
     }
 }

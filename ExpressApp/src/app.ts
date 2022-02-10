@@ -8,6 +8,7 @@ import { IExceptionFilter } from './errors/exception.flter.interface';
 import 'reflect-metadata';
 import { IUserController } from './users/users.interface.controller';
 import {json} from 'body-parser';
+import { IConfigService } from './config/config.interface.service';
 
 @injectable()
 export class App {
@@ -19,12 +20,10 @@ export class App {
 		@inject(TYPES.ILogger) private logger: ILogger,
 		@inject(TYPES.IUserController) private userController: UserController,
 		@inject(TYPES.IExceptionFilter) private exceptionFilter: IExceptionFilter,
+		@inject(TYPES.IConfigService) private configService: IConfigService,
 	) {
 		this.app = express();
-		this.port = 8000;
-		this.logger = logger;
-		this.userController = userController;
-		this.exceptionFilter = exceptionFilter;
+		this.port = Number(this.configService.get('PORT'));
 	}
 
 	private useMiddleware(){

@@ -36,10 +36,10 @@ export abstract class BaseController {
 	public bindRoutes(routes: RouteController[]): void {
 		for (const route of routes) {
 			this.logger.log(`Привязывание ${route.method} роута к пути ${route.path}`);
-			const middelware = route.middlewares?.map(m => m.execute.bind(this));
+			const middelware = route.middlewares?.map(m => m.execute.bind(m));
 			const handler = route.func.bind(this);
 			if(middelware){
-				this._router[route.method](route.path, middelware, handler);
+				this._router[route.method](route.path, [...middelware, handler]);
 			}else{
 				this._router[route.method](route.path, handler);
 			}

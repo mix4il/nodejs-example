@@ -20,12 +20,13 @@ export class UserController extends BaseController implements IUserController {
 		) {
 		super(loggerService);
 		this.bindRoutes([
-			{ path: '/login', method: 'post', func: this.login ,
-			 middlewares : [new ValidateMiddleware(RegistrationDto)]},
-			{ path: '/admin', method: 'post', func: this.admin },
+			{ path: '/login', method: 'post', func: this.login },
+			{ path: '/admin', method: 'post', func: this.admin,
+			middlewares : [new ValidateMiddleware(RegistrationDto)]},
 			{ path: '/', method: 'get', func: this.users },
 		]);
 	}
+
 
 	login({body}: Request<{}, {}, LoginDto>, res: Response, next: NextFunction): void {
 		console.log(body);
