@@ -9,6 +9,7 @@ import 'reflect-metadata';
 import { IUserController } from './users/users.interface.controller';
 import {json} from 'body-parser';
 import { IConfigService } from './config/config.interface.service';
+import { IPrismaService } from './database/prismaService.interface.service';
 
 @injectable()
 export class App {
@@ -21,6 +22,7 @@ export class App {
 		@inject(TYPES.IUserController) private userController: UserController,
 		@inject(TYPES.IExceptionFilter) private exceptionFilter: IExceptionFilter,
 		@inject(TYPES.IConfigService) private configService: IConfigService,
+		@inject(TYPES.IPrismaService) private prismaService: IPrismaService,
 	) {
 		this.app = express();
 		this.port = Number(this.configService.get('PORT'));
@@ -45,6 +47,7 @@ export class App {
 	public async init(): Promise<void> {
 		this.useMiddleware();
 		this.useRouter();
+		this.prismaService.connect();
 		this.useExceptionFilter();
 		this.listenServer();
 		this.logger.log(`Сервер запущен на ${this.port} порту`);
